@@ -1,27 +1,40 @@
 package com.example.mathpuzzle;
-import  java.math.*;
 
+import java.math.*;
+
+import androidx.annotation.ColorInt;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.w3c.dom.Text;
 
 public class GameActivity extends AppCompatActivity implements View.OnClickListener {
-    TextView l1b1, l1b2 ,l1b3, l1b4, l1b5, l2b1, l2b2, l2b3, l2b4, l2b5, l3b1, l3b2, l3b3, l3b4,
-            l3b5, l4b1, l4b2, l4b3, l4b4, l4b5, l5b1, l5b2, l5b3, l5b4, l5b5, ans1, ans2, ans3, ans4, ans5, ans6, ans7, ans8, ans9, ans10;
-
+    TextView l1b1, l1b2, l1b3, l1b4, l1b5, l2b1, l2b2, l2b3, l2b4, l2b5, l3b1, l3b2, l3b3, l3b4,
+            l3b5, l4b1, l4b2, l4b3, l4b4, l4b5, l5b1, l5b2, l5b3, l5b4, l5b5;
+    TextView ans1, ans2, ans3, ans4, ans5, ans6, ans7, ans8, ans9, ans10;
+    Button submit, reset;
+    AlertDialog ad;
     int[] operandArray = new int[10]; // all operands will go into this array
     int[] randomNumber = new int[10];
     int randomSize = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
-        for(int i = 0 ; i < 10; i++)
-        {
+        for (int i = 0; i < 10; i++) {
             randomNumber[i] = -1;
         }
         l1b1 = findViewById(R.id.line1box1);
@@ -99,9 +112,12 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         ans9.setOnClickListener(this);
         ans10 = findViewById(R.id.answer10);
         ans10.setOnClickListener(this);
+        submit = findViewById(R.id.submit);
+        submit.setOnClickListener(this);
+        reset = findViewById(R.id.reset);
+        reset.setOnClickListener(this);
         int[] operator = new int[5];
-        for(int i = 0; i < 5; i++)
-        {
+        for (int i = 0; i < 5; i++) {
             operator[i] = (int) (Math.random() * (4) + 1);
         }
         setOperator(l1b2, operator[0]);
@@ -110,19 +126,14 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         setOperator(l4b2, operator[3]);
         setOperator(l5b2, operator[4]);
         int[][] matrix = new int[5][4];
-        for(int i = 0; i < 5; i++)
-        {
+        for (int i = 0; i < 5; i++) {
             matrix[i][1] = operator[i];
             matrix[i][0] = (int) (Math.random() * (100) + 1); //56
-            if(operator[i] == 4)
-            {
+            if (operator[i] == 4) {
                 matrix[i][2] = (int) (Math.random() * (matrix[i][0]) + 1); //30
                 int temp = (int) (matrix[i][0] / matrix[i][2]); //1.86 -> 1
-                //matrix[i][2] = j;
                 matrix[i][0] = (temp * matrix[i][2]) * ((int) (Math.random() * (5) + 1));
-            }
-            else
-            {
+            } else {
                 matrix[i][2] = (int) (Math.random() * (100) + 1);
             }
             matrix[i][3] = findOperator(matrix[i][0], matrix[i][2], matrix[i][1]);
@@ -133,8 +144,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         setAns(l4b5, matrix[3][3]);
         setAns(l5b5, matrix[4][3]);
         int size = 0;
-        for(int i = 0 ; i < 5 ; i++)
-        {
+        for (int i = 0; i < 5; i++) {
             operandArray[size] = matrix[i][0];
             size++;
             operandArray[size] = matrix[i][2];
@@ -152,48 +162,204 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         setOperand(ans10);
     }
 
+    @SuppressLint("ResourceAsColor")
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        String temp = new String();
+        switch (v.getId()) {
             case R.id.answer1:
-                //
+                temp = (String) ans1.getText();
+                chooseAns(ans1, temp);
                 break;
             case R.id.answer2:
-                //
+                temp = (String) ans2.getText();
+                chooseAns(ans2, temp);
                 break;
             case R.id.answer3:
-                //
+                temp = (String) ans3.getText();
+                chooseAns(ans3, temp);
                 break;
             case R.id.answer4:
-                //
+                temp = (String) ans4.getText();
+                chooseAns(ans4, temp);
                 break;
             case R.id.answer5:
-                //
+                temp = (String) ans5.getText();
+                chooseAns(ans5, temp);
                 break;
             case R.id.answer6:
-                //
+                temp = (String) ans6.getText();
+                chooseAns(ans6, temp);
                 break;
             case R.id.answer7:
-                //
+                temp = (String) ans7.getText();
+                chooseAns(ans7, temp);
                 break;
             case R.id.answer8:
-                //
+                temp = (String) ans8.getText();
+                chooseAns(ans8, temp);
                 break;
             case R.id.answer9:
-                //
+                temp = (String) ans9.getText();
+                chooseAns(ans9, temp);
                 break;
             case R.id.answer10:
-                //
+                temp = (String) ans10.getText();
+                chooseAns(ans10, temp);
                 break;
+            case R.id.submit:
+                check();
+            case R.id.reset:
+                reset();
             default:
 
         }
     }
-    public void setOperator(TextView t, int i)
+
+    public void check() {
+        if (l1b1.getText().toString().equals("") || l1b3.getText().toString().equals("") || l2b1.getText().toString().equals("") || l2b3.getText().toString().equals("") || l3b1.getText().toString().equals("") || l3b3.getText() == "" || l4b1.getText().toString().equals("") || l4b3.getText() == "" || l5b1.getText().toString().equals("") || l5b3.getText().toString().equals("")) {
+
+        }
+        else {
+
+        }
+    }
+
+    @SuppressLint("ResourceAsColor")
+    public void reset()
     {
+        l1b1.setText("");
+        l1b3.setText("");
+        l2b1.setText("");
+        l2b3.setText("");
+        l3b1.setText("");
+        l3b3.setText("");
+        l4b1.setText("");
+        l4b3.setText("");
+        l5b1.setText("");
+        l5b3.setText("");
+        ans1.setBackgroundColor(Color.parseColor("#D3D3D3"));
+        ans2.setBackgroundColor(Color.parseColor("#D3D3D3"));
+        ans3.setBackgroundColor(Color.parseColor("#D3D3D3"));
+        ans4.setBackgroundColor(Color.parseColor("#D3D3D3"));
+        ans5.setBackgroundColor(Color.parseColor("#D3D3D3"));
+        ans6.setBackgroundColor(Color.parseColor("#D3D3D3"));
+        ans7.setBackgroundColor(Color.parseColor("#D3D3D3"));
+        ans8.setBackgroundColor(Color.parseColor("#D3D3D3"));
+        ans9.setBackgroundColor(Color.parseColor("#D3D3D3"));
+        ans10.setBackgroundColor(Color.parseColor("#D3D3D3"));
+
+    }
+
+
+    private void chooseAns(TextView t, String temp) {
+        l1b1.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceAsColor")
+            @Override
+            public void onClick(View v) {
+                if (l1b1.getText().toString().equals("")) {
+                    l1b1.setText(temp);
+                    t.setBackgroundColor(Color.parseColor("#ADD8E6"));
+                    System.out.println("zfjrbfrbf");
+                }
+            }
+        });
+        l1b3.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceAsColor")
+            @Override
+            public void onClick(View v) {
+                if (l1b3.getText().toString().equals("")) {
+                    l1b3.setText(temp);
+                    t.setBackgroundColor(Color.parseColor("#ADD8E6"));
+                }
+            }
+        });
+        l2b1.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceAsColor")
+            @Override
+            public void onClick(View v) {
+                if (l2b1.getText().toString().equals("")) {
+                    l2b1.setText(temp);
+                    t.setBackgroundColor(Color.parseColor("#ADD8E6"));
+                }
+            }
+        });
+        l2b3.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceAsColor")
+            @Override
+            public void onClick(View v) {
+                if (l2b3.getText().toString().equals("")) {
+                    l2b3.setText(temp);
+                    t.setBackgroundColor(Color.parseColor("#ADD8E6"));
+                }
+            }
+        });
+        l3b1.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceAsColor")
+            @Override
+            public void onClick(View v) {
+                if (l3b1.getText().toString().equals("")) {
+                    l3b1.setText(temp);
+                    t.setBackgroundColor(Color.parseColor("#ADD8E6"));
+                }
+            }
+        });
+        l3b3.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceAsColor")
+            @Override
+            public void onClick(View v) {
+                if (l3b3.getText().toString().equals("")) {
+                    l3b3.setText(temp);
+                    t.setBackgroundColor(Color.parseColor("#ADD8E6"));
+                }
+            }
+        });
+        l4b1.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceAsColor")
+            @Override
+            public void onClick(View v) {
+                if (l4b1.getText().toString().equals("")) {
+                    l4b1.setText(temp);
+                    t.setBackgroundColor(Color.parseColor("#ADD8E6"));
+                }
+            }
+        });
+        l4b3.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceAsColor")
+            @Override
+            public void onClick(View v) {
+                if (l4b3.getText().toString().equals("")) {
+                    l4b3.setText(temp);
+                    t.setBackgroundColor(Color.parseColor("#ADD8E6"));
+                }
+            }
+        });
+        l5b1.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceAsColor")
+            @Override
+            public void onClick(View v) {
+                if (l5b1.getText().toString().equals("")) {
+                    l5b1.setText(temp);
+                    t.setBackgroundColor(Color.parseColor("#ADD8E6"));
+
+                }
+            }
+        });
+        l5b3.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceAsColor")
+            @Override
+            public void onClick(View v) {
+                if (l5b3.getText().toString().equals("")) {
+                    l5b3.setText(temp);
+                    t.setBackgroundColor(Color.parseColor("#ADD8E6"));
+                }
+            }
+        });
+    }
+
+    public void setOperator(TextView t, int i) {
         String operator = new String();
-        switch (i)
-        {
+        switch (i) {
             case 1:
                 operator = "+";
                 break;
@@ -207,15 +373,13 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 operator = "/";
                 break;
             default:
-
         }
         t.setText(operator);
     }
-    int findOperator(int a, int b, int o)
-    {
+
+    int findOperator(int a, int b, int o) {
         int ans = 0;
-        switch (o)
-        {
+        switch (o) {
             case 1:
                 ans = a + b;
                 break;
@@ -233,34 +397,33 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         }
         return ans;
     }
-    public void setAns(TextView t, int i)
-    {
+
+    public void setAns(TextView t, int i) {
         t.setText(Integer.toString(i));
     }
-    public boolean search(int number)
-    {
-            for(int element : randomNumber){
-                if(element == number)
-                {
-                    return true;
-                }
+
+    public boolean search(int number) {
+        for (int element : randomNumber) {
+            if (element == number) {
+                return true;
             }
-            return  false;
+        }
+        return false;
     }
-    public void setOperand(TextView t)
-    {   int number = 0;
+
+    public void setOperand(TextView t) {
+        int number = 0;
         boolean flag = true;
-        do{
+        do {
             int pos = (int) (Math.random() * (10)); //generates a random number between 0 and 9
-            if(search(pos) == false)
-            {
+            if (search(pos) == false) {
                 number = pos;
                 randomNumber[randomSize] = pos;
                 randomSize++; // + 1
                 flag = false;
             }
         }
-        while(flag);
+        while (flag);
         t.setText(Integer.toString(operandArray[number]));
     }
 }
