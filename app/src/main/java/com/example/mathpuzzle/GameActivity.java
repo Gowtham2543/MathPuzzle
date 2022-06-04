@@ -8,13 +8,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -23,17 +31,21 @@ import org.w3c.dom.Text;
 public class GameActivity extends AppCompatActivity implements View.OnClickListener {
     TextView l1b1, l1b2, l1b3, l1b4, l1b5, l2b1, l2b2, l2b3, l2b4, l2b5, l3b1, l3b2, l3b3, l3b4,
             l3b5, l4b1, l4b2, l4b3, l4b4, l4b5, l5b1, l5b2, l5b3, l5b4, l5b5;
-    TextView ans1, ans2, ans3, ans4, ans5, ans6, ans7, ans8, ans9, ans10;
+    TextView ans1, ans2, ans3, ans4, ans5, ans6, ans7, ans8, ans9, ans10, pop;
     Button submit, reset;
-    AlertDialog ad;
     int[] operandArray = new int[10]; // all operands will go into this array
     int[] randomNumber = new int[10];
     int randomSize = 0;
-
+    int life = 3;
+    LayoutInflater inflater;
+    View popupView;
+    int width, height;
+    boolean focusable;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+
         for (int i = 0; i < 10; i++) {
             randomNumber[i] = -1;
         }
@@ -112,10 +124,23 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         ans9.setOnClickListener(this);
         ans10 = findViewById(R.id.answer10);
         ans10.setOnClickListener(this);
+
+
+        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        popupView = inflater.inflate(R.layout.popup_window, null);
+        width = LinearLayout.LayoutParams.WRAP_CONTENT;
+        height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        focusable = true;
+
+        pop = popupView.findViewById(R.id.popupt);
+        System.out.println(pop.getText().toString());
+
         submit = findViewById(R.id.submit);
         submit.setOnClickListener(this);
+
         reset = findViewById(R.id.reset);
         reset.setOnClickListener(this);
+
         int[] operator = new int[5];
         for (int i = 0; i < 5; i++) {
             operator[i] = (int) (Math.random() * (4) + 1);
@@ -128,13 +153,13 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         int[][] matrix = new int[5][4];
         for (int i = 0; i < 5; i++) {
             matrix[i][1] = operator[i];
-            matrix[i][0] = (int) (Math.random() * (100) + 1); //56
+            matrix[i][0] = (int) (Math.random() * (10) + 1); //56
             if (operator[i] == 4) {
                 matrix[i][2] = (int) (Math.random() * (matrix[i][0]) + 1); //30
                 int temp = (int) (matrix[i][0] / matrix[i][2]); //1.86 -> 1
                 matrix[i][0] = (temp * matrix[i][2]) * ((int) (Math.random() * (5) + 1));
             } else {
-                matrix[i][2] = (int) (Math.random() * (100) + 1);
+                matrix[i][2] = (int) (Math.random() * (10) + 1);
             }
             matrix[i][3] = findOperator(matrix[i][0], matrix[i][2], matrix[i][1]);
         }
@@ -209,8 +234,10 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.submit:
                 check();
+                break;
             case R.id.reset:
                 reset();
+                break;
             default:
 
         }
@@ -218,10 +245,115 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
     public void check() {
         if (l1b1.getText().toString().equals("") || l1b3.getText().toString().equals("") || l2b1.getText().toString().equals("") || l2b3.getText().toString().equals("") || l3b1.getText().toString().equals("") || l3b3.getText() == "" || l4b1.getText().toString().equals("") || l4b3.getText() == "" || l5b1.getText().toString().equals("") || l5b3.getText().toString().equals("")) {
-
+            Toast.makeText(GameActivity.this, "Fill all the box", Toast.LENGTH_LONG).show();
         }
         else {
 
+
+            final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
+            Test view = new Test(getApplicationContext());
+
+            if(checkAns(Integer.parseInt(l1b1.getText().toString()), Integer.parseInt(l1b3.getText().toString()), Integer.parseInt(l1b5.getText().toString()), l1b2.getText().toString()) && checkAns(Integer.parseInt(l2b1.getText().toString()), Integer.parseInt(l2b3.getText().toString()), Integer.parseInt(l2b5.getText().toString()), l2b2.getText().toString()) &&
+                checkAns(Integer.parseInt(l3b1.getText().toString()), Integer.parseInt(l3b3.getText().toString()), Integer.parseInt(l3b5.getText().toString()), l3b2.getText().toString()) && checkAns(Integer.parseInt(l4b1.getText().toString()), Integer.parseInt(l4b3.getText().toString()), Integer.parseInt(l4b5.getText().toString()), l4b2.getText().toString()) && checkAns(Integer.parseInt(l5b1.getText().toString()),
+                Integer.parseInt(l5b3.getText().toString()), Integer.parseInt(l5b5.getText().toString()), l5b2.getText().toString()))
+            {
+
+                popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+                popupView.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        popupWindow.dismiss();
+                        Intent intent = new Intent(GameActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        return true;
+                    }
+                });
+            }
+            else
+            {
+                if(life > 1)
+                {
+                    life--;
+                    pop.setText("You have lost. You still have " + life + " lives");
+                    popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+                    popupView.setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            popupWindow.dismiss();
+                            return true;
+                        }
+                    });
+                    reset();
+                }
+                else
+                {
+                    pop.setText("You have lost");
+                    popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+                    Intent intent = new Intent(GameActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    popupView.setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            popupWindow.dismiss();
+                            return true;
+                        }
+                    });
+                }
+            }
+        }
+    }
+    public boolean checkAns(int a, int b, int c, String s)
+    {
+        if(s.equals("+"))
+        {
+            if(a + b == c)
+            {
+                System.out.println(a + s + b + " " + c);
+                return true;
+            }
+            else
+            {
+                return  false;
+            }
+        }
+        else if(s.equals("-"))
+        {
+
+            if(a - b == c)
+            {
+                System.out.println(a + s + b + " " + c);
+                return true;
+            }
+            else
+            {
+                return  false;
+            }
+        }
+        else if(s.equals("*"))
+        {
+
+            if(a * b == c)
+            {
+                System.out.println(a + s + b + " " + c);
+                return true;
+            }
+            else
+            {
+                return  false;
+            }
+        }
+        else
+        {
+
+            if(a / b == c)
+            {
+                System.out.println(a + s + b + " " + c);
+                return true;
+            }
+            else
+            {
+                return  false;
+            }
         }
     }
 
@@ -250,8 +382,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         ans10.setBackgroundColor(Color.parseColor("#D3D3D3"));
 
     }
-
-
     private void chooseAns(TextView t, String temp) {
         l1b1.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("ResourceAsColor")
@@ -260,7 +390,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 if (l1b1.getText().toString().equals("")) {
                     l1b1.setText(temp);
                     t.setBackgroundColor(Color.parseColor("#ADD8E6"));
-                    System.out.println("zfjrbfrbf");
                 }
             }
         });
@@ -401,7 +530,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     public void setAns(TextView t, int i) {
         t.setText(Integer.toString(i));
     }
-
     public boolean search(int number) {
         for (int element : randomNumber) {
             if (element == number) {
