@@ -194,6 +194,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.answer1:
                 temp = (String) ans1.getText();
+                //ans1.setBackgroundColor(Color.parseColor("#FFC0CB"));
                 chooseAns(ans1, temp);
                 break;
             case R.id.answer2:
@@ -249,7 +250,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         }
         else {
 
-
             final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
             Test view = new Test(getApplicationContext());
 
@@ -263,11 +263,11 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public boolean onTouch(View v, MotionEvent event) {
                         popupWindow.dismiss();
-                        Intent intent = new Intent(GameActivity.this, MainActivity.class);
-                        startActivity(intent);
                         return true;
                     }
                 });
+                Intent intent = new Intent(GameActivity.this, MainActivity.class);
+                startActivity(intent);
             }
             else
             {
@@ -308,7 +308,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         {
             if(a + b == c)
             {
-                System.out.println(a + s + b + " " + c);
+                //System.out.println(a + s + b + " " + c);
                 return true;
             }
             else
@@ -321,7 +321,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
             if(a - b == c)
             {
-                System.out.println(a + s + b + " " + c);
+                //System.out.println(a + s + b + " " + c);
                 return true;
             }
             else
@@ -334,7 +334,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
             if(a * b == c)
             {
-                System.out.println(a + s + b + " " + c);
+                //System.out.println(a + s + b + " " + c);
                 return true;
             }
             else
@@ -344,10 +344,9 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         }
         else
         {
-
             if(a / b == c)
             {
-                System.out.println(a + s + b + " " + c);
+                //System.out.println(a + s + b + " " + c);
                 return true;
             }
             else
