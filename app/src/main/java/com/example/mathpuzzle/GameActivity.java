@@ -133,8 +133,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         focusable = true;
 
         pop = popupView.findViewById(R.id.popupt);
-        System.out.println(pop.getText().toString());
-
         submit = findViewById(R.id.submit);
         submit.setOnClickListener(this);
 
@@ -266,8 +264,10 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                         return true;
                     }
                 });
-                Intent intent = new Intent(GameActivity.this, MainActivity.class);
-                startActivity(intent);
+                Intent intent = new Intent();
+                intent.putExtra("Next Round", "Next Round");
+                setResult(RESULT_OK, intent);
+                finish();
             }
             else
             {
@@ -308,7 +308,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         {
             if(a + b == c)
             {
-                //System.out.println(a + s + b + " " + c);
+
                 return true;
             }
             else
