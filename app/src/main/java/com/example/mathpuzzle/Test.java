@@ -7,5 +7,4 @@ public class Test extends View {
     public Test(Context context) {
         super(context);
     }
-    
 }

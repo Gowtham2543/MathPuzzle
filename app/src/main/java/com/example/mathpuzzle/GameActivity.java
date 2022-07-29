@@ -6,8 +6,6 @@ import androidx.annotation.ColorInt;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -23,10 +21,6 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-
-import org.w3c.dom.Text;
 
 public class GameActivity extends AppCompatActivity implements View.OnClickListener {
     TextView l1b1, l1b2, l1b3, l1b4, l1b5, l2b1, l2b2, l2b3, l2b4, l2b5, l3b1, l3b2, l3b3, l3b4,
@@ -192,7 +186,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.answer1:
                 temp = (String) ans1.getText();
-                //ans1.setBackgroundColor(Color.parseColor("#FFC0CB"));
                 chooseAns(ans1, temp);
                 break;
             case R.id.answer2:
@@ -242,6 +235,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+
+    //Checks whether the given input is valid and correct
     public void check() {
         if (l1b1.getText().toString().equals("") || l1b3.getText().toString().equals("") || l2b1.getText().toString().equals("") || l2b3.getText().toString().equals("") || l3b1.getText().toString().equals("") || l3b3.getText() == "" || l4b1.getText().toString().equals("") || l4b3.getText() == "" || l5b1.getText().toString().equals("") || l5b3.getText().toString().equals("")) {
             Toast.makeText(GameActivity.this, "Fill all the box", Toast.LENGTH_LONG).show();
@@ -308,7 +303,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         {
             if(a + b == c)
             {
-
                 return true;
             }
             else
@@ -334,7 +328,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
             if(a * b == c)
             {
-                //System.out.println(a + s + b + " " + c);
                 return true;
             }
             else
@@ -346,7 +339,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         {
             if(a / b == c)
             {
-                //System.out.println(a + s + b + " " + c);
                 return true;
             }
             else
@@ -379,16 +371,24 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         ans8.setBackgroundColor(Color.parseColor("#D3D3D3"));
         ans9.setBackgroundColor(Color.parseColor("#D3D3D3"));
         ans10.setBackgroundColor(Color.parseColor("#D3D3D3"));
-
     }
+    int colorcode = 0;
     private void chooseAns(TextView t, String temp) {
         l1b1.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("ResourceAsColor")
             @Override
             public void onClick(View v) {
                 if (l1b1.getText().toString().equals("")) {
-                    l1b1.setText(temp);
-                    t.setBackgroundColor(Color.parseColor("#ADD8E6"));
+                    if(t.getBackground() instanceof  ColorDrawable)
+                    {
+                        ColorDrawable cd = (ColorDrawable) t.getBackground();
+                        colorcode = cd.getColor();
+                    }
+                    if(colorcode == Color.parseColor("#D3D3D3"))
+                    {
+                        l1b1.setText(temp);
+                        t.setBackgroundColor(Color.parseColor("#ADD8E6"));
+                    }
                 }
             }
         });
@@ -397,8 +397,16 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 if (l1b3.getText().toString().equals("")) {
-                    l1b3.setText(temp);
-                    t.setBackgroundColor(Color.parseColor("#ADD8E6"));
+                    if(t.getBackground() instanceof  ColorDrawable)
+                    {
+                        ColorDrawable cd = (ColorDrawable) t.getBackground();
+                        colorcode = cd.getColor();
+                    }
+                    if(colorcode == Color.parseColor("#D3D3D3"))
+                    {
+                        l1b3.setText(temp);
+                        t.setBackgroundColor(Color.parseColor("#ADD8E6"));
+                    }
                 }
             }
         });
@@ -407,8 +415,16 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 if (l2b1.getText().toString().equals("")) {
-                    l2b1.setText(temp);
-                    t.setBackgroundColor(Color.parseColor("#ADD8E6"));
+                    if(t.getBackground() instanceof  ColorDrawable)
+                    {
+                        ColorDrawable cd = (ColorDrawable) t.getBackground();
+                        colorcode = cd.getColor();
+                    }
+                    if(colorcode == Color.parseColor("#D3D3D3"))
+                    {
+                        l2b1.setText(temp);
+                        t.setBackgroundColor(Color.parseColor("#ADD8E6"));
+                    }
                 }
             }
         });
@@ -417,8 +433,16 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 if (l2b3.getText().toString().equals("")) {
-                    l2b3.setText(temp);
-                    t.setBackgroundColor(Color.parseColor("#ADD8E6"));
+                    if(t.getBackground() instanceof  ColorDrawable)
+                    {
+                        ColorDrawable cd = (ColorDrawable) t.getBackground();
+                        colorcode = cd.getColor();
+                    }
+                    if(colorcode == Color.parseColor("#D3D3D3"))
+                    {
+                        l2b3.setText(temp);
+                        t.setBackgroundColor(Color.parseColor("#ADD8E6"));
+                    }
                 }
             }
         });
@@ -427,8 +451,16 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 if (l3b1.getText().toString().equals("")) {
-                    l3b1.setText(temp);
-                    t.setBackgroundColor(Color.parseColor("#ADD8E6"));
+                    if(t.getBackground() instanceof  ColorDrawable)
+                    {
+                        ColorDrawable cd = (ColorDrawable) t.getBackground();
+                        colorcode = cd.getColor();
+                    }
+                    if(colorcode == Color.parseColor("#D3D3D3"))
+                    {
+                        l3b1.setText(temp);
+                        t.setBackgroundColor(Color.parseColor("#ADD8E6"));
+                    }
                 }
             }
         });
@@ -437,8 +469,16 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 if (l3b3.getText().toString().equals("")) {
-                    l3b3.setText(temp);
-                    t.setBackgroundColor(Color.parseColor("#ADD8E6"));
+                    if(t.getBackground() instanceof  ColorDrawable)
+                    {
+                        ColorDrawable cd = (ColorDrawable) t.getBackground();
+                        colorcode = cd.getColor();
+                    }
+                    if(colorcode == Color.parseColor("#D3D3D3"))
+                    {
+                        l3b3.setText(temp);
+                        t.setBackgroundColor(Color.parseColor("#ADD8E6"));
+                    }
                 }
             }
         });
@@ -447,8 +487,16 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 if (l4b1.getText().toString().equals("")) {
-                    l4b1.setText(temp);
-                    t.setBackgroundColor(Color.parseColor("#ADD8E6"));
+                    if(t.getBackground() instanceof  ColorDrawable)
+                    {
+                        ColorDrawable cd = (ColorDrawable) t.getBackground();
+                        colorcode = cd.getColor();
+                    }
+                    if(colorcode == Color.parseColor("#D3D3D3"))
+                    {
+                        l4b1.setText(temp);
+                        t.setBackgroundColor(Color.parseColor("#ADD8E6"));
+                    }
                 }
             }
         });
@@ -457,8 +505,16 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 if (l4b3.getText().toString().equals("")) {
-                    l4b3.setText(temp);
-                    t.setBackgroundColor(Color.parseColor("#ADD8E6"));
+                    if(t.getBackground() instanceof  ColorDrawable)
+                    {
+                        ColorDrawable cd = (ColorDrawable) t.getBackground();
+                        colorcode = cd.getColor();
+                    }
+                    if(colorcode == Color.parseColor("#D3D3D3"))
+                    {
+                        l4b3.setText(temp);
+                        t.setBackgroundColor(Color.parseColor("#ADD8E6"));
+                    }
                 }
             }
         });
@@ -467,8 +523,16 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 if (l5b1.getText().toString().equals("")) {
-                    l5b1.setText(temp);
-                    t.setBackgroundColor(Color.parseColor("#ADD8E6"));
+                    if(t.getBackground() instanceof  ColorDrawable)
+                    {
+                        ColorDrawable cd = (ColorDrawable) t.getBackground();
+                        colorcode = cd.getColor();
+                    }
+                    if(colorcode == Color.parseColor("#D3D3D3"))
+                    {
+                        l5b1.setText(temp);
+                        t.setBackgroundColor(Color.parseColor("#ADD8E6"));
+                    }
 
                 }
             }
@@ -478,8 +542,16 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 if (l5b3.getText().toString().equals("")) {
-                    l5b3.setText(temp);
-                    t.setBackgroundColor(Color.parseColor("#ADD8E6"));
+                    if(t.getBackground() instanceof  ColorDrawable)
+                    {
+                        ColorDrawable cd = (ColorDrawable) t.getBackground();
+                        colorcode = cd.getColor();
+                    }
+                    if(colorcode == Color.parseColor("#D3D3D3"))
+                    {
+                        l5b3.setText(temp);
+                        t.setBackgroundColor(Color.parseColor("#ADD8E6"));
+                    }
                 }
             }
         });
@@ -537,7 +609,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         }
         return false;
     }
-
     public void setOperand(TextView t) {
         int number = 0;
         boolean flag = true;
